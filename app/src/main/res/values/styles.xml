@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Light theme（已升级：colorAccent → colorSecondary） -->
+    <style name="AppTheme.Light" parent="android:Theme.Holo.Light">
+        <item name="colorPrimaryDark">@color/light_primary_dark</item>
+        <item name="colorSecondary">@color/light_accent</item> <!-- ✅ 关键修改：colorAccent → colorSecondary -->
+    </style>
+
+    <!-- Dark theme（已升级：colorAccent → colorSecondary） -->
+    <style name="AppTheme.Dark" parent="android:Theme.Holo">
+        <item name="colorPrimaryDark">@color/dark_primary_dark</item>
+        <item name="colorSecondary">@color/dark_accent</item> <!-- ✅ 关键修改：colorAccent → colorSecondary -->
+    </style>
+</resources>
