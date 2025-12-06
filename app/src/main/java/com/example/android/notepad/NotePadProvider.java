@@ -63,7 +63,7 @@ public class NotePadProvider extends ContentProvider implements PipeDataWriter<C
     /**
      * The database version
      */
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     /**
      * A projection map used to select columns from the database
@@ -155,6 +155,9 @@ public class NotePadProvider extends ContentProvider implements PipeDataWriter<C
         sNotesProjectionMap.put(
                 NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE,
                 NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE);
+        
+        // Maps "category_id" to "category_id"
+        sNotesProjectionMap.put(NotePad.Notes.COLUMN_NAME_CATEGORY_ID, NotePad.Notes.COLUMN_NAME_CATEGORY_ID);
 
         /*
          * Creates an initializes a projection map for handling Live Folders
@@ -196,7 +199,8 @@ public class NotePadProvider extends ContentProvider implements PipeDataWriter<C
                     NotePad.Notes.COLUMN_NAME_TITLE + " TEXT," +
                     NotePad.Notes.COLUMN_NAME_NOTE + " TEXT," +
                     NotePad.Notes.COLUMN_NAME_CREATE_DATE + " INTEGER," +
-                    NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE + " INTEGER" + // 添加时间戳字段
+                    NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE + " INTEGER," + // 添加时间戳字段
+                    NotePad.Notes.COLUMN_NAME_CATEGORY_ID + " INTEGER" + // 添加分类ID字段
                     ");");
 
             // 创建分类表
@@ -217,13 +221,10 @@ public class NotePadProvider extends ContentProvider implements PipeDataWriter<C
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
 
-            // 如果数据库版本小于2，添加分类ID字段
-            if (oldVersion < 2) {
-                db.execSQL("ALTER TABLE " + NotePad.Notes.TABLE_NAME + " ADD COLUMN " + NotePad.Notes.COLUMN_NAME_CATEGORY_ID + " INTEGER");
-            }
-
-            // 删除旧表并创建新表
+            // 删除所有旧表
             db.execSQL("DROP TABLE IF EXISTS notes");
+            db.execSQL("DROP TABLE IF EXISTS categories");
+            // 创建新表
             onCreate(db);
         }
     }

@@ -64,7 +64,8 @@ public class NoteEditor extends Activity {
             new String[] {
                     NotePad.Notes._ID,
                     NotePad.Notes.COLUMN_NAME_TITLE,
-                    NotePad.Notes.COLUMN_NAME_NOTE
+                    NotePad.Notes.COLUMN_NAME_NOTE,
+                    NotePad.Notes.COLUMN_NAME_CATEGORY_ID
             };
 
     // A label for the saved state of the activity
@@ -313,6 +314,17 @@ public class NoteEditor extends Activity {
             if (mOriginalContent == null) {
                 mOriginalContent = note;
             }
+            
+            // Load and set the category from the cursor
+            int colCategoryIndex = mCursor.getColumnIndex(NotePad.Notes.COLUMN_NAME_CATEGORY_ID);
+            if (!mCursor.isNull(colCategoryIndex)) {
+                long categoryId = mCursor.getLong(colCategoryIndex);
+                // 根据categoryId设置spinner选中项（这里假设分类ID与数组索引对应）
+                mCategorySpinner.setSelection((int) categoryId);
+            } else {
+                // 默认选择未分类
+                mCategorySpinner.setSelection(0);
+            }
 
             /*
              * Something is wrong. The Cursor should always contain data. Report an error in the
@@ -355,23 +367,24 @@ public class NoteEditor extends Activity {
     protected void onPause() {
         super.onPause();
 
-        // 只有在编辑模式下才需要保存
-        if (mState == STATE_EDIT) {
-            // 获取当前笔记内容
-            String noteText = mText.getText().toString();
+        // 获取当前笔记内容
+        String noteText = mText.getText().toString();
+        
+        // 获取当前选中的分类ID（假设分类ID与数组索引对应）
+        long categoryId = mCategorySpinner.getSelectedItemPosition();
 
-            // 创建ContentValues对象来存储新数据
-            ContentValues values = new ContentValues();
-            values.put(NotePad.Notes.COLUMN_NAME_NOTE, noteText);
+        // 创建ContentValues对象来存储新数据
+        ContentValues values = new ContentValues();
+        values.put(NotePad.Notes.COLUMN_NAME_NOTE, noteText);
+        values.put(NotePad.Notes.COLUMN_NAME_CATEGORY_ID, categoryId);
 
-            // 更新数据库
-            getContentResolver().update(
-                    mUri,  // 当前笔记的URI
-                    values,  // 新的内容值
-                    null,  // 不需要WHERE条件
-                    null  // 不需要WHERE参数
-            );
-        }
+        // 更新数据库
+        getContentResolver().update(
+                mUri,  // 当前笔记的URI
+                values,  // 新的内容值
+                null,  // 不需要WHERE条件
+                null  // 不需要WHERE参数
+        );
     }
 
     /**
@@ -523,6 +536,10 @@ public class NoteEditor extends Activity {
         // Sets up a map to contain values to be updated in the provider.
         ContentValues values = new ContentValues();
         values.put(NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE, System.currentTimeMillis());
+        
+        // 获取当前选中的分类ID
+        long categoryId = mCategorySpinner.getSelectedItemPosition();
+        values.put(NotePad.Notes.COLUMN_NAME_CATEGORY_ID, categoryId);
 
         // If the action is to insert a new note, this creates an initial title for it.
         if (mState == STATE_INSERT) {

@@ -71,7 +71,8 @@ public class NotesList extends ListActivity {
     private static final String[] PROJECTION = new String[] {
             NotePad.Notes._ID, // 0
             NotePad.Notes.COLUMN_NAME_TITLE, // 1
-            NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE // 2 (添加时间戳字段)
+            NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE, // 2 (添加时间戳字段)
+            NotePad.Notes.COLUMN_NAME_CATEGORY_ID // 3 (添加分类ID字段)
     };
 
     /** The index of the title column */
@@ -137,11 +138,19 @@ public class NotesList extends ListActivity {
          */
 
         // The names of the cursor columns to display in the view, initialized to the title column
-        String[] dataColumns = { NotePad.Notes.COLUMN_NAME_TITLE, NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE } ;
+        String[] dataColumns = { 
+            NotePad.Notes.COLUMN_NAME_TITLE, 
+            NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE, 
+            NotePad.Notes.COLUMN_NAME_CATEGORY_ID 
+        };
 
         // The view IDs that will display the cursor columns, initialized to the TextView in
         // noteslist_item.xml
-        int[] viewIDs = { android.R.id.text1, R.id.note_time };
+        int[] viewIDs = { 
+            android.R.id.text1, 
+            R.id.note_time,
+            R.id.note_category
+        };
 
         // Creates the backing adapter for the ListView.
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(
@@ -151,6 +160,32 @@ public class NotesList extends ListActivity {
                 dataColumns,
                 viewIDs
         );
+        
+        // 获取分类数组资源
+        final String[] categories = getResources().getStringArray(R.array.category_array);
+        
+        // 设置ViewBinder来处理分类显示
+        adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+                if (view.getId() == R.id.note_category) {
+                    // 获取分类ID
+                    long categoryId = cursor.getLong(columnIndex);
+                    // 转换为分类名称
+                    String categoryName = categories[(int) categoryId];
+                    // 设置到TextView
+                    ((TextView) view).setText(categoryName);
+                    return true;
+                } else if (view.getId() == R.id.note_time) {
+                    // 处理时间显示
+                    long timeInMillis = cursor.getLong(columnIndex);
+                    String formattedTime = formatTime(timeInMillis);
+                    ((TextView) view).setText(formattedTime);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         // Sets the ListView's adapter to be the cursor adapter that was just created.
         setListAdapter(adapter);
@@ -222,13 +257,50 @@ public class NotesList extends ListActivity {
             );
         }
 
-        setListAdapter(new SimpleCursorAdapter(
+        // 创建SimpleCursorAdapter
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(
                 this,
                 R.layout.noteslist_item,
                 cursor,
-                new String[]{NotePad.Notes.COLUMN_NAME_TITLE, NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE},
-                new int[]{android.R.id.text1, R.id.note_time}
-        ));
+                new String[]{ 
+                    NotePad.Notes.COLUMN_NAME_TITLE, 
+                    NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE,
+                    NotePad.Notes.COLUMN_NAME_CATEGORY_ID
+                },
+                new int[]{ 
+                    android.R.id.text1, 
+                    R.id.note_time,
+                    R.id.note_category
+                }
+        );
+        
+        // 获取分类数组资源
+        final String[] categories = getResources().getStringArray(R.array.category_array);
+        
+        // 设置ViewBinder来处理分类显示
+        adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+                if (view.getId() == R.id.note_category) {
+                    // 获取分类ID
+                    long categoryId = cursor.getLong(columnIndex);
+                    // 转换为分类名称
+                    String categoryName = categories[(int) categoryId];
+                    // 设置到TextView
+                    ((TextView) view).setText(categoryName);
+                    return true;
+                } else if (view.getId() == R.id.note_time) {
+                    // 处理时间显示
+                    long timeInMillis = cursor.getLong(columnIndex);
+                    String formattedTime = formatTime(timeInMillis);
+                    ((TextView) view).setText(formattedTime);
+                    return true;
+                }
+                return false;
+            }
+        });
+        
+        setListAdapter(adapter);
     }
 
     @Override
@@ -347,9 +419,21 @@ public class NotesList extends ListActivity {
             return true;
         } else if (item.getItemId() == R.id.menu_light) {
             // 处理亮色主题选项
+            SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(KEY_THEME, THEME_LIGHT);
+            editor.apply();
+            // 重新创建Activity以应用新主题
+            recreate();
             return true;
         } else if (item.getItemId() == R.id.menu_dark) {
             // 处理暗色主题选项
+            SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(KEY_THEME, THEME_DARK);
+            editor.apply();
+            // 重新创建Activity以应用新主题
+            recreate();
             return true;
         }
         return super.onOptionsItemSelected(item);
