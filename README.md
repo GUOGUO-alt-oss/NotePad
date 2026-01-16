@@ -1429,42 +1429,6 @@ public class NotesLiveFolder extends Activity {
    - 实现自动构建和测试
 >>>>>>> 06e0829f6a858444b32880d0ecf2d80b44713ae0
 
-这里展示应用的实际运行效果：
-
-1. **笔记列表界面**
-   - 显示所有笔记，包含标题、分类和修改时间
-   - 支持主题切换
-   - 顶部搜索功能
-    <img width="497" height="882" alt="image" src="https://github.com/user-attachments/assets/78b3d4d2-bb20-4227-a55c-77036915e996" />
-
-
-2. **笔记编辑界面**
-   - 带行线的编辑区域
-   - 底部分类选择器
-   - 自动保存功能
-    <img width="503" height="887" alt="image" src="https://github.com/user-attachments/assets/ebd8584f-9670-4b46-9890-d506e8f70f5f" />
-
-
-3. **分类选择效果**
-   - 支持多种预设分类
-   - 再次编辑时保留分类选择
-    <img width="499" height="885" alt="image" src="https://github.com/user-attachments/assets/64c5915d-8cb2-4c61-9d58-257eb9775fbd" />
-    <img width="505" height="891" alt="image" src="https://github.com/user-attachments/assets/d8a0339b-42fd-481d-80a1-70fee9d469bc" />
-
-
-4. **搜索功能**
-   - 实时搜索结果
-   - 支持按标题和内容搜索
-    <img width="493" height="882" alt="image" src="https://github.com/user-attachments/assets/fd8f8e9f-6986-4bc5-93e3-3f9e62ddfd22" />
-    <img width="499" height="888" alt="image" src="https://github.com/user-attachments/assets/8c3e8f0d-d007-4baa-8b33-06c7c75d8677" />
-
-
-5. **主题切换**
-   - 明亮主题
-   - 暗黑主题
-   <img width="504" height="876" alt="image" src="https://github.com/user-attachments/assets/316c65d3-db53-47ef-96eb-97442feb386a" />
-   <img width="500" height="877" alt="image" src="https://github.com/user-attachments/assets/c08215ad-28ac-4015-b3e1-04d8e2420648" />
-
 ## 十、许可证
 
 ```
