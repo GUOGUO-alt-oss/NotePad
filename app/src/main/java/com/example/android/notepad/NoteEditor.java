@@ -41,6 +41,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import androidx.appcompat.widget.AppCompatEditText;
 
 /**
  * This Activity handles "editing" a note, where editing is responding to
@@ -86,7 +87,7 @@ public class NoteEditor extends Activity {
     /**
      * Defines a custom EditText View that draws lines between each line of text that is displayed.
      */
-    public static class LinedEditText extends EditText {
+    public static class LinedEditText extends AppCompatEditText {
         private Rect mRect;
         private Paint mPaint;
 

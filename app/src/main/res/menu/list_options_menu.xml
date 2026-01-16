@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <!-- 创建新笔记 -->
     <item android:id="@+id/menu_add"
         android:icon="@drawable/ic_menu_compose"
         android:title="@string/menu_add"
         android:alphabeticShortcut='a'
-        android:showAsAction="always" />
+        app:showAsAction="always" />
 
     <!-- 搜索菜单项：关键修改在这里 -->
     <item
@@ -13,8 +14,8 @@
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/menu_search"
         android:alphabeticShortcut="s"
-        android:showAsAction="always|collapseActionView"
-        android:actionViewClass="android.widget.SearchView" />
+        app:showAsAction="always|collapseActionView"
+        app:actionViewClass="android.widget.SearchView" />
 
     <!-- 粘贴 -->
     <item android:id="@+id/menu_paste"
